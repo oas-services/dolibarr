@@ -694,6 +694,9 @@ if (empty($reshook))
 					$amount_ht[$line->tva_tx] += $line->total_ht;
 					$amount_tva[$line->tva_tx] += $line->total_tva;
 					$amount_ttc[$line->tva_tx] += $line->total_ttc;
+					$multicurrency_amount_ht[$line->tva_tx] += $line->multicurrency_total_ht;
+					$multicurrency_amount_tva[$line->tva_tx] += $line->multicurrency_total_tva;
+					$multicurrency_amount_ttc[$line->tva_tx] += $line->multicurrency_total_ttc;
 					$i ++;
 				}
 			}
@@ -749,6 +752,9 @@ if (empty($reshook))
 					$discount->amount_ht = abs($amount_ht[$tva_tx]);
 					$discount->amount_tva = abs($amount_tva[$tva_tx]);
 					$discount->amount_ttc = abs($amount_ttc[$tva_tx]);
+					$discount->multicurrency_amount_ht = abs($multicurrency_amount_ht[$tva_tx]);
+					$discount->multicurrency_amount_tva = abs($multicurrency_amount_tva[$tva_tx]);
+					$discount->multicurrency_amount_ttc = abs($multicurrency_amount_ttc[$tva_tx]);
 					$discount->tva_tx = abs($tva_tx);
 
 					$result = $discount->create($user);
@@ -1535,6 +1541,7 @@ if (empty($reshook))
 					{
 						$line->origin = $object->origin;
 						$line->origin_id = $line->id;
+						$line->fk_prev_id = $line->id;
 						$line->fetch_optionals($line->id);
 						$line->situation_percent =  $line->get_prev_progress($object->id); // get good progress including credit note 
 						
@@ -3250,8 +3257,7 @@ if ($action == 'create')
 		print '<tr><td>' . $langs->trans($newclassname) . '</td><td colspan="2">' . $objectsrc->getNomUrl(1);
 		// We check if Origin document (id and type is known) has already at least one invoice attached to it
 		$objectsrc->fetchObjectLinked($originid,$origin,'','facture');
-		$cntinvoice=count($objectsrc->linkedObjects['facture']);
-		if ($cntinvoice>=1)
+		if (is_array($objectsrc->linkedObjects['facture']) && count($objectsrc->linkedObjects['facture']) >= 1)
 		{
 			setEventMessages('WarningBillExist', null, 'warnings');
 			echo ' ('.$langs->trans('LatestRelatedBill').end($objectsrc->linkedObjects['facture'])->getNomUrl(1).')';
