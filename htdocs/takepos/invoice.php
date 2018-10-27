@@ -29,8 +29,7 @@ require '../main.inc.php';	// Load $user and permissions
 require_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facture.class.php';
 require_once DOL_DOCUMENT_ROOT.'/compta/paiement/class/paiement.class.php';
 
-$langs->load("bills");
-$langs->load("cashdesk");
+$langs->loadLangs(array("bills", "cashdesk"));
 
 $id = GETPOST('id','int');
 $action = GETPOST('action','alpha');
@@ -76,16 +75,20 @@ if ($action == 'valid' && $user->rights->facture->creer){
 	$invoice->set_paid($user);
 }
 
-if (($action=="addline" or $action=="freezone") and $placeid==0)
+if (($action=="addline" || $action=="freezone") and $placeid==0)
 {
+	// $place is id of POS, $placeid is id of invoice
 	if ($placeid==0) {
-	$invoice = new Facture($db);
-	$invoice->socid=$conf->global->CASHDESK_ID_THIRDPARTY;
-	$invoice->date=mktime();
-	$invoice->ref="asdf";
-	$placeid=$invoice->create($user);
-	$sql="UPDATE ".MAIN_DB_PREFIX."facture set facnumber='(PROV-POS-".$place.")' where rowid=".$placeid;
-	$db->query($sql);
+		$invoice = new Facture($db);
+		$invoice->socid=$conf->global->CASHDESK_ID_THIRDPARTY;
+		$invoice->date=dol_now();
+		$invoice->ref="(PROV-POS)";
+		$invoice->module_source = 'takepos';
+		$invoice->pos_source = (string) (empty($place)?'0':$place);
+
+		$placeid=$invoice->create($user);
+		$sql="UPDATE ".MAIN_DB_PREFIX."facture set facnumber='(PROV-POS-".$place.")' where rowid=".$placeid;
+		$db->query($sql);
 	}
 }
 
@@ -112,7 +115,7 @@ if ($action=="deleteline"){
         $row = $db->fetch_array ($resql);
         $deletelineid=$row[0];
         $invoice->deleteline($deletelineid);
-        $invoice->fetch($deletelineid);
+        $invoice->fetch($placeid);
     }
 }
 

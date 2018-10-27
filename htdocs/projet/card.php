@@ -333,7 +333,6 @@ if (empty($reshook))
 			if (GETPOST('socid','int') > 0) $object->fetch_thirdparty(GETPOST('socid','int'));
 			else unset($object->thirdparty);
 		}
-
 	}
 
 	// Build doc
@@ -765,7 +764,7 @@ elseif ($object->id > 0)
 
 		// Label
 		print '<tr><td class="fieldrequired">'.$langs->trans("Label").'</td>';
-		print '<td><input class="quatrevingtpercent" name="title" value="'.$object->title.'"></td></tr>';
+		print '<td><input class="quatrevingtpercent" name="title" value="'.dol_escape_htmltag($object->title).'"></td></tr>';
 
 		// Status
 		print '<tr><td class="fieldrequired">'.$langs->trans("Status").'</td><td>';

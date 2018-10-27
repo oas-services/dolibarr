@@ -696,6 +696,9 @@ textarea.centpercent {
 	height: 28px;
 	vertical-align: middle;
 }
+.divsocialnetwork:not(:first-child) {
+    padding-left: 20px;
+}
 div.divsearchfield {
 	float: <?php print $left; ?>;
 	margin-<?php print $right; ?>: 12px;
@@ -1853,7 +1856,7 @@ foreach($mainmenuusedarray as $val)
 }
 form#login {
 	padding-bottom: 30px;
-	font-size: 13px;
+	font-size: 14px;
 	vertical-align: middle;
 }
 .login_table_title {
@@ -2381,7 +2384,7 @@ a.tabunactive {
 }
 a.tab:link, a.tab:visited, a.tab:hover, a.tab#active {
 	font-family: <?php print $fontlist ?>;
-	padding: 12px 9px 13px;
+	padding: 12px 14px 13px;
     margin: 0em 0.2em;
     text-decoration: none;
     white-space: nowrap;
@@ -3268,7 +3271,7 @@ ul.noborder li:nth-child(even):not(.liste_titre) {
 .boxstats130 {
     width: 158px;
     height: 48px;
-    padding: 3px
+    padding: 3px;
 }
 .boxstats {
     padding: 3px;
